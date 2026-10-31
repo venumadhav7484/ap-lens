@@ -1,0 +1,80 @@
+{
+ "source": "real",
+ "xes": "Subset of BPIC19 (Zenodo 17295283, CC BY 4.0): 217,406 of 251,734 cases.",
+ "events": 1214244,
+ "cases": 217406,
+ "activities": 28,
+ "resources": 571,
+ "human_resources": 553,
+ "resource_prefixes": {
+  "user": 914908,
+  "NONE": 215245,
+  "batch": 84091
+ },
+ "activity_counts": {
+  "Record Goods Receipt": 220629,
+  "Create Purchase Order Item": 217406,
+  "Record Invoice Receipt": 208018,
+  "Vendor creates invoice": 202293,
+  "Clear Invoice": 179458,
+  "Remove Payment Block": 54458,
+  "Create Purchase Requisition Item": 41918,
+  "Receive Order Confirmation": 31015,
+  "Change Quantity": 18482,
+  "Change Price": 10570,
+  "Delete Purchase Order Item": 7722,
+  "Cancel Invoice Receipt": 6210,
+  "Vendor creates debit memo": 5497,
+  "Change Approval for Purchase Order": 3251,
+  "Change Delivery Indicator": 2131,
+  "Cancel Goods Receipt": 1655,
+  "Release Purchase Order": 985,
+  "Reactivate Purchase Order Item": 503,
+  "Cancel Subsequent Invoice": 445,
+  "Release Purchase Requisition": 436,
+  "Change Storage Location": 352,
+  "Block Purchase Order Item": 339,
+  "Update Order Confirmation": 231,
+  "Record Subsequent Invoice": 151,
+  "Set Payment Block": 52,
+  "Change Currency": 32,
+  "Change payment term": 4,
+  "Change Final Invoice Indicator": 1
+ },
+ "missing_expected_activities": [],
+ "case_columns": [
+  "case_id",
+  "company",
+  "document_type",
+  "goods_receipt",
+  "gr_based_inv_verif",
+  "item",
+  "item_category",
+  "item_type",
+  "purch_doc_category_name",
+  "purchasing_document",
+  "source",
+  "spend_area_text",
+  "spend_classification_text",
+  "sub_spend_area_text",
+  "vendor"
+ ],
+ "event_columns": [
+  "activity",
+  "case_id",
+  "cumulative_net_worth_eur",
+  "resource",
+  "seq",
+  "ts",
+  "user"
+ ],
+ "item_category_counts": {
+  "3-way match, invoice before GR": 217406
+ },
+ "value_present_share": 1.0,
+ "value_varies_within_case_share": 0.002998997267784698,
+ "ts_range": [
+  "1948-01-26 22:59:00+00:00",
+  "2019-01-18 13:34:00+00:00"
+ ]
+}

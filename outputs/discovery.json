@@ -1,0 +1,525 @@
+{
+ "source": "real",
+ "overview": {
+  "events": 1214244,
+  "cases": 217406,
+  "activities": 28,
+  "human_share": 0.7534795312968399
+ },
+ "flows": [
+  {
+   "flow": "3-way match, invoice before GR",
+   "cases": 217406,
+   "share": 1.0
+  }
+ ],
+ "activities": [
+  {
+   "activity": "Record Goods Receipt",
+   "events": 220629,
+   "cases": 205263,
+   "human_share": 0.8641520380367042,
+   "median_days_to_next": 3.102777777777778,
+   "repeat_share": 0.03424874429390587
+  },
+  {
+   "activity": "Create Purchase Order Item",
+   "events": 217406,
+   "cases": 217406,
+   "human_share": 0.9292797806868256,
+   "median_days_to_next": 5.614583333333333,
+   "repeat_share": 0.0
+  },
+  {
+   "activity": "Record Invoice Receipt",
+   "events": 208018,
+   "cases": 198510,
+   "human_share": 0.9592487188608678,
+   "median_days_to_next": 26.323611111111113,
+   "repeat_share": 0.041599919399526473
+  },
+  {
+   "activity": "Vendor creates invoice",
+   "events": 202293,
+   "cases": 197502,
+   "human_share": 0.0,
+   "median_days_to_next": 2.428472222222222,
+   "repeat_share": 0.021847880021468136
+  },
+  {
+   "activity": "Clear Invoice",
+   "events": 179458,
+   "cases": 172812,
+   "human_share": 0.9584582464977878,
+   "median_days_to_next": 13.838888888888889,
+   "repeat_share": 0.033417818207068954
+  },
+  {
+   "activity": "Remove Payment Block",
+   "events": 54458,
+   "cases": 53429,
+   "human_share": 0.7220794006390245,
+   "median_days_to_next": 23.913194444444443,
+   "repeat_share": 0.01815493458608621
+  },
+  {
+   "activity": "Create Purchase Requisition Item",
+   "events": 41918,
+   "cases": 41918,
+   "human_share": 0.7806431604561286,
+   "median_days_to_next": 0.4423611111111111,
+   "repeat_share": 0.0
+  },
+  {
+   "activity": "Receive Order Confirmation",
+   "events": 31015,
+   "cases": 31011,
+   "human_share": 0.8506206674189908,
+   "median_days_to_next": 5.222916666666666,
+   "repeat_share": 0.0001289864886653123
+  },
+  {
+   "activity": "Change Quantity",
+   "events": 18482,
+   "cases": 15067,
+   "human_share": 0.9998917866031815,
+   "median_days_to_next": 1.5486111111111112,
+   "repeat_share": 0.14136855379305768
+  },
+  {
+   "activity": "Change Price",
+   "events": 10570,
+   "cases": 9556,
+   "human_share": 1.0,
+   "median_days_to_next": 3.4298611111111112,
+   "repeat_share": 0.07764755127668481
+  },
+  {
+   "activity": "Delete Purchase Order Item",
+   "events": 7722,
+   "cases": 7691,
+   "human_share": 1.0,
+   "median_days_to_next": 0.35208333333333336,
+   "repeat_share": 0.0040306852164868024
+  },
+  {
+   "activity": "Cancel Invoice Receipt",
+   "events": 6210,
+   "cases": 5849,
+   "human_share": 0.8884057971014493,
+   "median_days_to_next": 0.002777777777777778,
+   "repeat_share": 0.05539408445888186
+  },
+  {
+   "activity": "Vendor creates debit memo",
+   "events": 5497,
+   "cases": 5373,
+   "human_share": 0.0,
+   "median_days_to_next": 2.473611111111111,
+   "repeat_share": 0.021775544388609715
+  },
+  {
+   "activity": "Change Approval for Purchase Order",
+   "events": 3251,
+   "cases": 2240,
+   "human_share": 1.0,
+   "median_days_to_next": 5.847916666666666,
+   "repeat_share": 0.17232142857142857
+  },
+  {
+   "activity": "Change Delivery Indicator",
+   "events": 2131,
+   "cases": 1906,
+   "human_share": 1.0,
+   "median_days_to_next": 3.2416666666666667,
+   "repeat_share": 0.10335781741867786
+  },
+  {
+   "activity": "Cancel Goods Receipt",
+   "events": 1655,
+   "cases": 1552,
+   "human_share": 0.7504531722054381,
+   "median_days_to_next": 3.7020833333333334,
+   "repeat_share": 0.03994845360824742
+  },
+  {
+   "activity": "Release Purchase Order",
+   "events": 985,
+   "cases": 397,
+   "human_share": 1.0,
+   "median_days_to_next": 0.029166666666666667,
+   "repeat_share": 0.48614609571788414
+  },
+  {
+   "activity": "Reactivate Purchase Order Item",
+   "events": 503,
+   "cases": 490,
+   "human_share": 1.0,
+   "median_days_to_next": 0.25416666666666665,
+   "repeat_share": 0.024489795918367346
+  },
+  {
+   "activity": "Cancel Subsequent Invoice",
+   "events": 445,
+   "cases": 434,
+   "human_share": 1.0,
+   "median_days_to_next": 1.10625,
+   "repeat_share": 0.02534562211981567
+  },
+  {
+   "activity": "Release Purchase Requisition",
+   "events": 436,
+   "cases": 436,
+   "human_share": 0.5756880733944955,
+   "median_days_to_next": 0.0020833333333333333,
+   "repeat_share": 0.0
+  },
+  {
+   "activity": "Change Storage Location",
+   "events": 352,
+   "cases": 304,
+   "human_share": 1.0,
+   "median_days_to_next": 2.3052083333333333,
+   "repeat_share": 0.08881578947368421
+  },
+  {
+   "activity": "Block Purchase Order Item",
+   "events": 339,
+   "cases": 328,
+   "human_share": 1.0,
+   "median_days_to_next": 0.09583333333333334,
+   "repeat_share": 0.03048780487804878
+  },
+  {
+   "activity": "Update Order Confirmation",
+   "events": 231,
+   "cases": 215,
+   "human_share": 0.9696969696969697,
+   "median_days_to_next": 6.886805555555555,
+   "repeat_share": 0.06046511627906977
+  },
+  {
+   "activity": "Record Subsequent Invoice",
+   "events": 151,
+   "cases": 143,
+   "human_share": 0.9735099337748344,
+   "median_days_to_next": 7.0152777777777775,
+   "repeat_share": 0.04195804195804196
+  },
+  {
+   "activity": "Set Payment Block",
+   "events": 52,
+   "cases": 50,
+   "human_share": 1.0,
+   "median_days_to_next": 10.104166666666666,
+   "repeat_share": 0.04
+  },
+  {
+   "activity": "Change Currency",
+   "events": 32,
+   "cases": 32,
+   "human_share": 1.0,
+   "median_days_to_next": 1.4430555555555555,
+   "repeat_share": 0.0
+  },
+  {
+   "activity": "Change payment term",
+   "events": 4,
+   "cases": 4,
+   "human_share": 1.0,
+   "median_days_to_next": 14.544444444444444,
+   "repeat_share": 0.0
+  },
+  {
+   "activity": "Change Final Invoice Indicator",
+   "events": 1,
+   "cases": 1,
+   "human_share": 1.0,
+   "median_days_to_next": 1.2993055555555555,
+   "repeat_share": 0.0
+  }
+ ],
+ "variants": [
+  {
+   "path": "Create Purchase Order Item > Vendor creates invoice > Record Goods Receipt > Record Invoice Receipt > Clear Invoice",
+   "cases": 47959,
+   "share": 0.220596487677433
+  },
+  {
+   "path": "Create Purchase Order Item > Record Goods Receipt > Vendor creates invoice > Record Invoice Receipt > Clear Invoice",
+   "cases": 29410,
+   "share": 0.13527685528458278
+  },
+  {
+   "path": "Create Purchase Order Item > Vendor creates invoice > Record Goods Receipt > Record Invoice Receipt > Remove Payment Block > Clear Invoice",
+   "cases": 10854,
+   "share": 0.04992502506830538
+  },
+  {
+   "path": "Create Purchase Order Item > Receive Order Confirmation > Record Goods Receipt > Vendor creates invoice > Record Invoice Receipt > Clear Invoice",
+   "cases": 9694,
+   "share": 0.04458938575752279
+  },
+  {
+   "path": "Create Purchase Order Item > Vendor creates invoice > Record Invoice Receipt > Record Goods Receipt > Remove Payment Block > Clear Invoice",
+   "cases": 8835,
+   "share": 0.04063825285410706
+  },
+  {
+   "path": "Create Purchase Requisition Item > Create Purchase Order Item > Vendor creates invoice > Record Goods Receipt > Record Invoice Receipt > Clear Invoice",
+   "cases": 8673,
+   "share": 0.03989310322622191
+  },
+  {
+   "path": "Create Purchase Order Item > Record Goods Receipt > Vendor creates invoice > Record Invoice Receipt > Remove Payment Block > Clear Invoice",
+   "cases": 7694,
+   "share": 0.03539000763548384
+  },
+  {
+   "path": "Create Purchase Order Item > Delete Purchase Order Item",
+   "cases": 4807,
+   "share": 0.022110705316320617
+  },
+  {
+   "path": "Create Purchase Order Item > Receive Order Confirmation > Vendor creates invoice > Record Goods Receipt > Record Invoice Receipt > Clear Invoice",
+   "cases": 4222,
+   "share": 0.019419887215624224
+  },
+  {
+   "path": "Create Purchase Requisition Item > Create Purchase Order Item > Vendor creates invoice > Record Goods Receipt > Record Invoice Receipt",
+   "cases": 4155,
+   "share": 0.01911170804853592
+  }
+ ],
+ "n_variants": 7388,
+ "slowest_handoffs": [
+  {
+   "handoff": "Cancel Goods Receipt \u2192 Cancel Invoice Receipt",
+   "n": 292,
+   "median_days": 182.23333333333332
+  },
+  {
+   "handoff": "Clear Invoice \u2192 Cancel Invoice Receipt",
+   "n": 1755,
+   "median_days": 91.93819444444445
+  },
+  {
+   "handoff": "Vendor creates invoice \u2192 Clear Invoice",
+   "n": 706,
+   "median_days": 58.427083333333336
+  },
+  {
+   "handoff": "Change Approval for Purchase Order \u2192 Clear Invoice",
+   "n": 98,
+   "median_days": 52.00347222222222
+  },
+  {
+   "handoff": "Change Approval for Purchase Order \u2192 Change Quantity",
+   "n": 311,
+   "median_days": 51.93055555555556
+  },
+  {
+   "handoff": "Change Quantity \u2192 Clear Invoice",
+   "n": 151,
+   "median_days": 51.05416666666667
+  },
+  {
+   "handoff": "Change Delivery Indicator \u2192 Clear Invoice",
+   "n": 242,
+   "median_days": 43.50069444444445
+  },
+  {
+   "handoff": "Record Goods Receipt \u2192 Cancel Invoice Receipt",
+   "n": 353,
+   "median_days": 41.95
+  },
+  {
+   "handoff": "Change Price \u2192 Clear Invoice",
+   "n": 235,
+   "median_days": 37.90625
+  },
+  {
+   "handoff": "Record Goods Receipt \u2192 Clear Invoice",
+   "n": 473,
+   "median_days": 37.83125
+  }
+ ],
+ "block_flow": {
+  "cases": 217406,
+  "unblocks": 54458,
+  "unblock_human_share": 0.7220794006390245,
+  "median_days_inv_to_clear": 43.75694444444444
+ },
+ "buckets": {
+  "human": {
+   "events": 453622,
+   "human_events": 407169,
+   "activities": [
+    {
+     "activity": "Record Goods Receipt",
+     "events": 220629,
+     "why": "Physical receipt at the warehouse"
+    },
+    {
+     "activity": "Create Purchase Order Item",
+     "events": 217406,
+     "why": "Buying decision"
+    },
+    {
+     "activity": "Delete Purchase Order Item",
+     "events": 7722,
+     "why": "Money call"
+    },
+    {
+     "activity": "Cancel Invoice Receipt",
+     "events": 6210,
+     "why": "Money call"
+    },
+    {
+     "activity": "Cancel Goods Receipt",
+     "events": 1655,
+     "why": "Warehouse correction"
+    }
+   ]
+  },
+  "code": {
+   "events": 589769,
+   "human_events": 371544,
+   "activities": [
+    {
+     "activity": "Record Invoice Receipt",
+     "events": 208018,
+     "why": "Invoice capture: e-invoicing / OCR, not a judgement"
+    },
+    {
+     "activity": "Vendor creates invoice",
+     "events": 202293,
+     "why": "Vendor-side event; capture via e-invoice"
+    },
+    {
+     "activity": "Clear Invoice",
+     "events": 179458,
+     "why": "Payment run; fully decided by fields"
+    }
+   ]
+  },
+  "agent": {
+   "events": 83510,
+   "human_events": 68373,
+   "activities": [
+    {
+     "activity": "Remove Payment Block",
+     "events": 54458,
+     "why": "Release decision: code checks the match, agent triages the rest"
+    },
+    {
+     "activity": "Change Quantity",
+     "events": 18482,
+     "why": "Agent drafts the buyer note; buyer approves"
+    },
+    {
+     "activity": "Change Price",
+     "events": 10570,
+     "why": "Agent drafts the buyer note; buyer approves"
+    }
+   ]
+  },
+  "unassigned": {
+   "events": 84092,
+   "human_events": 64571,
+   "activities": [
+    {
+     "activity": "Create Purchase Requisition Item",
+     "events": 41918,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Receive Order Confirmation",
+     "events": 31015,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Vendor creates debit memo",
+     "events": 5497,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Change Delivery Indicator",
+     "events": 2131,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Release Purchase Order",
+     "events": 985,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Reactivate Purchase Order Item",
+     "events": 503,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Cancel Subsequent Invoice",
+     "events": 445,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Release Purchase Requisition",
+     "events": 436,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Change Storage Location",
+     "events": 352,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Block Purchase Order Item",
+     "events": 339,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Update Order Confirmation",
+     "events": 231,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Record Subsequent Invoice",
+     "events": 151,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Set Payment Block",
+     "events": 52,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Change Currency",
+     "events": 32,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Change payment term",
+     "events": 4,
+     "why": "Review: not mapped yet"
+    },
+    {
+     "activity": "Change Final Invoice Indicator",
+     "events": 1,
+     "why": "Review: not mapped yet"
+    }
+   ]
+  },
+  "delete": {
+   "events": 3251,
+   "human_events": 3251,
+   "activities": [
+    {
+     "activity": "Change Approval for Purchase Order",
+     "events": 3251,
+     "why": "Repeated approval changes rarely change the outcome"
+    }
+   ]
+  }
+ }
+}

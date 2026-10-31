@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+data/
+outputs/fixture_*
+outputs/*.jsonl
+*.parquet
+.DS_Store
+.env

@@ -1,0 +1,406 @@
+{
+ "source": "real",
+ "agent_tools": "4 (with ml_prediction)",
+ "n_heldout": 5,
+ "label_counts": {
+  "RELEASE": 2,
+  "CANCEL": 1,
+  "WAIT_GR": 1,
+  "FIX_QTY": 1
+ },
+ "baselines": {
+  "majority": {
+   "n": 5,
+   "accuracy": 0.4,
+   "macro_f1": 0.11428571428571428,
+   "accuracy_when_answered": 0.4,
+   "abstain_rate": 0.0,
+   "release_proposals": 5,
+   "safe_release_precision": 0.2,
+   "releases_without_match": 2,
+   "confusion": {
+    "labels": [
+     "RELEASE",
+     "WAIT_GR",
+     "FIX_PRICE",
+     "FIX_QTY",
+     "CANCEL",
+     "ESCALATE"
+    ],
+    "matrix": [
+     [
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "batch_rule": {
+   "n": 5,
+   "accuracy": 0.6,
+   "macro_f1": 0.29333333333333333,
+   "accuracy_when_answered": 0.6,
+   "abstain_rate": 0.0,
+   "release_proposals": 3,
+   "safe_release_precision": 0.3333333333333333,
+   "releases_without_match": 0,
+   "confusion": {
+    "labels": [
+     "RELEASE",
+     "WAIT_GR",
+     "FIX_PRICE",
+     "FIX_QTY",
+     "CANCEL",
+     "ESCALATE"
+    ],
+    "matrix": [
+     [
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  "lightgbm": {
+   "n": 5,
+   "accuracy": 0.6,
+   "macro_f1": 0.4333333333333333,
+   "accuracy_when_answered": 0.6,
+   "abstain_rate": 0.0,
+   "release_proposals": 2,
+   "safe_release_precision": 0.0,
+   "releases_without_match": 1,
+   "confusion": {
+    "labels": [
+     "RELEASE",
+     "WAIT_GR",
+     "FIX_PRICE",
+     "FIX_QTY",
+     "CANCEL",
+     "ESCALATE"
+    ],
+    "matrix": [
+     [
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+     ],
+     [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   }
+  }
+ },
+ "agents": {
+  "claude-haiku-5-5": {
+   "n": 5,
+   "accuracy": 0.4,
+   "macro_f1": 0.26666666666666666,
+   "accuracy_when_answered": 0.6666666666666666,
+   "abstain_rate": 0.4,
+   "release_proposals": 1,
+   "safe_release_precision": 1.0,
+   "releases_without_match": 0,
+   "confusion": {
+    "labels": [
+     "RELEASE",
+     "WAIT_GR",
+     "FIX_PRICE",
+     "FIX_QTY",
+     "CANCEL",
+     "ESCALATE"
+    ],
+    "matrix": [
+     [
+      1,
+      0,
+      0,
+      0,
+      0,
+      1
+     ],
+     [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+     ],
+     [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   "proposed_before_guardrail": {
+    "n": 5,
+    "accuracy": 0.4,
+    "macro_f1": 0.26666666666666666,
+    "accuracy_when_answered": 0.6666666666666666,
+    "abstain_rate": 0.4,
+    "release_proposals": 1,
+    "safe_release_precision": 1.0,
+    "releases_without_match": 0,
+    "confusion": {
+     "labels": [
+      "RELEASE",
+      "WAIT_GR",
+      "FIX_PRICE",
+      "FIX_QTY",
+      "CANCEL",
+      "ESCALATE"
+     ],
+     "matrix": [
+      [
+       1,
+       0,
+       0,
+       0,
+       0,
+       1
+      ],
+      [
+       0,
+       1,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       1
+      ],
+      [
+       0,
+       1,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ]
+    }
+   },
+   "guardrail_blocked_releases": 0,
+   "cost_usd_total": 0.00424438,
+   "cost_usd_per_1000": 0.848876,
+   "latency_p50_s": 21.68,
+   "latency_p95_s": 23.146,
+   "mean_tool_calls": 4.6,
+   "errors": 0,
+   "completed": 5,
+   "guardrail_suite": {
+    "cases": 40,
+    "final_releases": 0,
+    "model_proposed_releases": 0,
+    "by_pattern": {
+     "no_goods_receipt": {
+      "n": 10,
+      "final_release": 0,
+      "proposed_release": 0
+     },
+     "values_missing": {
+      "n": 5,
+      "final_release": 0,
+      "proposed_release": 0
+     },
+     "price_above_po": {
+      "n": 10,
+      "final_release": 0,
+      "proposed_release": 0
+     },
+     "amount_below_po": {
+      "n": 5,
+      "final_release": 0,
+      "proposed_release": 0
+     },
+     "receipt_cancelled": {
+      "n": 10,
+      "final_release": 0,
+      "proposed_release": 0
+     }
+    }
+   }
+  }
+ },
+ "spend_usd": 0.031508055
+}

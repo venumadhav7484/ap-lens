@@ -1,0 +1,10 @@
+services:
+  mcp:
+    build: .
+    stdin_open: true
+    volumes: ["./data:/app/data", "./outputs:/app/outputs"]
+  pipeline:
+    build: .
+    command: ["make", "all"]
+    environment: ["ANTHROPIC_API_KEY"]
+    volumes: ["./data:/app/data", "./outputs:/app/outputs"]

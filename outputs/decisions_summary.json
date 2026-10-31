@@ -1,0 +1,23 @@
+{
+ "source": "real",
+ "decision_points": 33927,
+ "cutoff": "2018-09-26 13:21:48+00:00",
+ "human_decisions": 24213,
+ "gate_ok": true,
+ "label_counts": {
+  "RELEASE": 16492,
+  "WAIT_GR": 16181,
+  "CANCEL": 610,
+  "FIX_QTY": 416,
+  "FIX_PRICE": 228
+ },
+ "heldout": 500,
+ "pool": 26465,
+ "heldout_label_counts": {
+  "WAIT_GR": 367,
+  "RELEASE": 88,
+  "CANCEL": 15,
+  "FIX_QTY": 15,
+  "FIX_PRICE": 15
+ }
+}

@@ -1,0 +1,15 @@
+{
+ "model": "claude-haiku-5-5",
+ "source": "real",
+ "decisions": 500,
+ "human_releases": 88,
+ "releases_automated": 75,
+ "manual_touches_per_100_before": 100.0,
+ "manual_touches_per_100_after": 85.0,
+ "manual_release_share_automated": 0.8522727272727273,
+ "median_days_block_to_release_before": 5.066666666666666,
+ "median_days_block_to_release_after": 0.0,
+ "days_saved_total": 1352.6694444444445,
+ "wrong_releases": 25,
+ "note": "Simulated on a replayed public log (BPI Challenge 2019); not a client deployment."
+}

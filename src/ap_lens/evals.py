@@ -78,7 +78,9 @@ def run(models: list[str], n: int | None = None, effort: str = "low", cap: float
         m["mean_tool_calls"] = float(np.mean([len(t.get("tool_calls", [])) for t in traces])) if traces else None
         m["errors"] = int(sum(1 for t in traces if t.get("error")))
         m["completed"] = int(len(done))
-        g = _run_agent(agent, gids, C.out(f"guardrail_traces_{model}.jsonl"), spent, cap + 1.0)
+        gpath = C.out(f"guardrail_traces_{model}.jsonl")
+        gpath.write_text("")
+        g = _run_agent(agent, gids, gpath, spent, cap + 1.0)
         m["guardrail_suite"] = {
             "cases": len(gids),
             "final_releases": int(sum(r["final"]["action"] == "RELEASE" for r in g.values())),

@@ -11,26 +11,37 @@
 
 | | Agent (claude-haiku-5-5) | Best non-LLM baseline |
 |---|---|---|
-| Agreement with the person | **86.0%** | 87.2% (batch_rule) |
-| Macro-F1 (all 5 actions) | **0.35** | 0.50 (lightgbm) |
-| Safe-release precision | **73.0%** | 67.9% (batch_rule) |
-| Price / quantity / cancel cases caught | 0 of 45 | see report |
+| Agreement with the person | **85.2%** | 87.2% (batch_rule) |
+| Macro-F1 (all 5 actions) | **0.37** | 0.50 (lightgbm) |
+| Safe-release precision | **69.7%** | 67.9% (batch_rule) |
+| Price / quantity / cancel cases caught | 1 of 45 | see report |
 | Unsafe releases, 40-case guardrail suite | **0** | — |
 
-Replay (simulated): manual touches fall to **85 per 100**, with **25 releases where the person did something else**. Agent escalates 3.8%. Cost ≈ $0.51 per 1,000 decisions, p50 2.9s.
+Replay (simulated): manual touches fall to **86 per 100**, with **27 releases where the person did something else**. Agent escalates 4.0%. Cost ≈ $0.58 per 1,000 decisions, p50 3.3s.
 <!-- numbers:end -->
 
 The table above is written by `ap-lens report` from `outputs/`. No number is typed by hand. Full report: [`outputs/report.html`](outputs/report.html).
 
-### What run 1 says (31 Oct 2026, Haiku 5.5, 3 tools)
+The table shows the latest run (run 2). Both runs, side by side (from [`outputs/run1_3tools/`](outputs/run1_3tools/) and [`outputs/run2_4tools/`](outputs/run2_4tools/)):
 
-- **The agent ties the batch rule; it doesn't beat it.** On the common cases (release once the goods arrive, otherwise wait), a two-line rule is as accurate as the LLM. So that decision belongs in **code**, not in an agent.
-- **Where the agent is better: safety.** Its releases are the safest of any system: 73% matched a person's release with nothing reversed later, vs 68% for the batch rule and 64% for LightGBM. It escalates 4% of cases instead of guessing, and it never proposed a release the match check would block.
-- **Where it loses: price, quantity and cancel decisions.** The agent caught 0 of 45; LightGBM caught 10 of 45 by learning vendor and item patterns. The log carries no separate invoice amounts (the value field varies within a case for only 0.3% of cases), so the timeline alone can't show the mismatch a person saw.
+| Haiku 5.5, 500 decisions | Run 1: 3 tools | Run 2: + `ml_prediction` | LightGBM alone |
+|---|---|---|---|
+| Agreement with the person | 86.0% | 85.2% | 84.0% |
+| Macro-F1 | 0.35 | 0.37 | **0.50** |
+| Safe-release precision | **73.0%** | 69.7% | 64.4% |
+| Price / quantity / cancel caught | 0 of 45 | 1 of 45 | **10 of 45** |
+| Unsafe releases (guardrail suite) | 0 / 40 | 0 / 40 | — |
+| Releases where the person did something else (replay) | 25 | 27 | — |
+| Cost, 500 decisions | $0.26 | $0.29 | ~$0 |
 
-### Run 2 (in progress): LightGBM as a tool
+Differences of a point or two between runs are within noise at n = 500.
 
-Run 2 gives the agent a fourth tool, `ml_prediction`: LightGBM's class probabilities for the decision point, from the same model the baseline uses. The question is whether the agent can combine the model's statistical view with case evidence and catch the price, quantity and cancel decisions without losing release safety. Run 1's outputs are kept in [`outputs/run1_3tools/`](outputs/run1_3tools/) for comparison.
+### What the two runs say
+
+- **Common cases belong in code.** On "release once the goods arrive, otherwise wait", a two-line batch rule (87.2%) is as accurate as the LLM.
+- **The agent's edge is safety.** Its releases are the safest of any system, it escalates about 4% of cases instead of guessing, and it never proposed a release the match check would block.
+- **Handing the agent the model didn't transfer the model's skill.** In run 2, LightGBM's price and quantity calls were right 7 times out of 9 (2/3 price, 5/6 quantity). The agent overrode all of them and sided with the timeline and the match check, which can't see those mismatches: the log carries no separate invoice amounts, and the value field varies within a case for only 0.3% of cases. It was right to ignore LightGBM's cancel calls (3 correct out of 31).
+- **The FDE conclusion:** route high-confidence FIX_PRICE / FIX_QTY predictions from LightGBM straight to the buyer queue in code. Keep the agent for release triage, escalation and drafting the buyer note. Prompt-tuning the agent to trust the model more would mostly import the noise.
 
 ## The exception
 

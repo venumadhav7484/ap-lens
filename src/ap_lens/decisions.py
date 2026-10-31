@@ -38,7 +38,42 @@ def _prefix_facts(rows: pd.DataFrame) -> dict:
             "gr_posted": gr_net > 0, "gr_since_inv": gr_since_inv > 0,
             "n_events": len(acts), "n_inv": acts.count(C.INV), "n_gr": acts.count(C.GR),
             "n_cancel_gr": acts.count(C.CANCEL_GR), "n_chg_price": acts.count(C.CHG_PRICE),
-            "n_chg_qty": acts.count(C.CHG_QTY)}
+            "n_chg_qty": acts.count(C.CHG_QTY), **_line_facts(rows)}
+
+
+def _num(x):
+    try:
+        x = float(x)
+    except (TypeError, ValueError):
+        return None
+    return x if np.isfinite(x) else None
+
+
+def _line_facts(rows: pd.DataFrame) -> dict:
+    """Quantity and unit price per line, for feeds that carry them (the CSV pilot feed).
+    PO terms follow later Change Price / Change Quantity events; received quantity is net of
+    cancelled receipts; the invoice is the latest one recorded."""
+    out = {"po_qty": None, "po_unit_price": None, "received_qty": None,
+           "invoiced_qty": None, "invoice_unit_price": None}
+    if "qty" not in rows or "unit_price" not in rows or rows["qty"].isna().all():
+        return out
+    received = 0.0
+    for a, q, p in zip(rows[C.ACT], rows["qty"], rows["unit_price"]):
+        q, p = _num(q), _num(p)
+        if a == C.CREATE:
+            out["po_qty"], out["po_unit_price"] = q, p
+        elif a == C.CHG_PRICE and p is not None:
+            out["po_unit_price"] = p
+        elif a == C.CHG_QTY and q is not None:
+            out["po_qty"] = q
+        elif a == C.GR and q is not None:
+            received += q
+        elif a == C.CANCEL_GR and q is not None:
+            received -= q
+        elif a == C.INV:
+            out["invoiced_qty"], out["invoice_unit_price"] = q, p
+    out["received_qty"] = received
+    return out
 
 
 def check_match(f: dict) -> dict:
@@ -51,11 +86,29 @@ def check_match(f: dict) -> dict:
     def valid(x):  # an amount the matcher can trust: present, finite, positive
         return x is not None and np.isfinite(x) and x > 0
 
+    gr_posted = bool(f.get("gr_posted"))
+    lp = {k: _num(f.get(k)) for k in ("po_qty", "po_unit_price", "received_qty", "invoiced_qty",
+                                      "invoice_unit_price")}
+    if all(valid(lp[k]) for k in ("po_qty", "po_unit_price", "invoiced_qty", "invoice_unit_price")):
+        # Line-level match: price per unit, and invoiced quantity against what was received.
+        tol = C.VALUE_TOLERANCE
+        price_ok = abs(lp["invoice_unit_price"] - lp["po_unit_price"]) <= tol * lp["po_unit_price"]
+        recv = lp["received_qty"] or 0.0
+        qty_ok = (recv > 0 and lp["invoiced_qty"] <= recv * (1 + tol)
+                  and lp["invoiced_qty"] <= lp["po_qty"] * (1 + tol))
+        mismatch = ("goods not received" if recv <= 0 or not gr_posted else
+                    "price" if not price_ok else "quantity" if not qty_ok else None)
+        return {"gr_posted": gr_posted, "values_known": True, "line_level": True,
+                "po_unit_price": lp["po_unit_price"], "invoice_unit_price": lp["invoice_unit_price"],
+                "price_diff_pct": round(100 * (lp["invoice_unit_price"] / lp["po_unit_price"] - 1), 2),
+                "po_qty": lp["po_qty"], "received_qty": recv, "invoiced_qty": lp["invoiced_qty"],
+                "mismatch": mismatch, "within_tolerance": gr_posted and price_ok and qty_ok}
+
     values_known = valid(po) and valid(inv)
     inv_vs_po = None if not values_known else (inv - po) / po
-    ok = (bool(f.get("gr_posted")) and values_known and close(inv, po)
+    ok = (gr_posted and values_known and close(inv, po)
           and (gr is None or (valid(gr) and close(gr, inv))))
-    return {"gr_posted": bool(f.get("gr_posted")), "values_known": values_known,
+    return {"gr_posted": gr_posted, "values_known": values_known,
             "invoice_vs_po_pct": None if inv_vs_po is None else round(100 * inv_vs_po, 2),
             "within_tolerance": ok}
 
@@ -99,7 +152,11 @@ def build(ev: pd.DataFrame, cs: pd.DataFrame) -> pd.DataFrame:
     df = pd.DataFrame(pts)
     m = df.apply(lambda r: check_match(r.to_dict()), axis=1, result_type="expand")
     df["match_ok"] = m["within_tolerance"]
-    df["inv_vs_po_pct"] = m["invoice_vs_po_pct"]
+    pct = m["invoice_vs_po_pct"] if "invoice_vs_po_pct" in m else pd.Series(np.nan, index=df.index)
+    if "price_diff_pct" in m:  # line-level feeds: the price difference is the comparable signal
+        pct = pct.fillna(m["price_diff_pct"])
+    df["inv_vs_po_pct"] = pct
+    df["mismatch"] = m["mismatch"] if "mismatch" in m else None
     return df
 
 

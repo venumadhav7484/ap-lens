@@ -72,7 +72,11 @@ CATEGORICAL = ["item_type", "spend_area_text", "sub_spend_area_text", "document_
 
 # Invoices recorded after the goods are never blocked in BPIC19, so they are not decision
 # points there. In the OCEL log every invoice goes through a three-way match decision.
-BLOCKED_ONLY = SOURCE != "ocel"
+BLOCKED_ONLY = SOURCE not in ("ocel", "csv")  # a client feed: every invoice is a match decision
+
+# With APLENS_REDACT=1, vendor and company identifiers are pseudonymised before any case data is
+# sent to the model API. Matching runs in code on the real values either way.
+REDACT = os.environ.get("APLENS_REDACT", "0") == "1"
 
 # ---- the flow AP-Lens works on ----
 BLOCK_FLOW = "3-way match, invoice before GR"

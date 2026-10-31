@@ -1,0 +1,23 @@
+{
+ "source": "csv",
+ "decision_points": 4018,
+ "cutoff": "2026-09-08 18:05:18.270179+00:00",
+ "human_decisions": 3158,
+ "gate_ok": true,
+ "label_counts": {
+  "RELEASE": 1966,
+  "WAIT_GR": 1518,
+  "FIX_PRICE": 249,
+  "FIX_QTY": 197,
+  "CANCEL": 88
+ },
+ "heldout": 500,
+ "pool": 3142,
+ "heldout_label_counts": {
+  "WAIT_GR": 219,
+  "RELEASE": 180,
+  "FIX_PRICE": 47,
+  "FIX_QTY": 39,
+  "CANCEL": 15
+ }
+}

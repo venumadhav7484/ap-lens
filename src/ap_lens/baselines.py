@@ -39,8 +39,13 @@ def majority(pool: pd.DataFrame, test: pd.DataFrame) -> np.ndarray:
 def batch_rule(test: pd.DataFrame) -> np.ndarray:
     out = []
     for _, r in test.iterrows():
+        mm = r.get("mismatch")
         if r["match_ok"]:
             out.append("RELEASE")
+        elif mm == "price":
+            out.append("FIX_PRICE")
+        elif mm == "quantity":
+            out.append("FIX_QTY")
         elif not r["gr_posted"]:
             out.append("WAIT_GR")
         elif r["inv_vs_po_pct"] is not None and not np.isnan(r["inv_vs_po_pct"]) and r["inv_vs_po_pct"] < 0:

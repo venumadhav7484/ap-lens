@@ -7,3 +7,4 @@ outputs/*.jsonl
 .DS_Store
 .env
 outputs/audit.sqlite
+data/feed/

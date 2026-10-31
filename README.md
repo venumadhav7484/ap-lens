@@ -98,14 +98,31 @@ That log turned out to be unusable for accuracy. Its match outcome doesn't depen
   - Nothing executes automatically. RELEASE and WAIT_GR are recorded as proposals; FIX_*, CANCEL and ESCALATE go to a review queue.
 - **Audit log:** append-only SQLite, one row per decision (proposal, guardrail result, cost, latency) plus the reviewer's action, which gives the live agreement figure.
 - **Docker:** the image builds and runs (1.09 GB). `/healthz` returns 200; requests without a key return 401.
-- **CI:** GitHub Actions runs the 19 offline tests and the full pipeline on the synthetic log on every push.
+- **CI:** GitHub Actions runs the 28 offline tests and the full pipeline on the synthetic log on every push.
+
+### Pilot path: a client's CSV feed
+
+A shadow pilot doesn't need a live SAP connector. A daily export of four CSVs is enough: PO lines, goods receipts, invoice lines and AP's past actions. **[`docs/feed_spec.md`](docs/feed_spec.md)** is the spec to hand a client, with columns, examples and the SAP tables they usually come from.
+
+- **Line-level matching** (`decisions.check_match`): when a feed carries quantity and unit price, the match compares price per unit and invoiced vs received quantity, and reports `mismatch: price | quantity | goods not received`. That's what lets FIX_PRICE be told apart from FIX_QTY. BPIC19, with totals only, keeps the old path.
+- **Adapter** (`csvfeed.py`): validates the files, names any missing column, rejects receipts or invoices that point to unknown PO lines, and builds the same event log as every other source.
+- **Redaction** (`APLENS_REDACT=1`): vendor and company IDs become stable pseudonyms before anything goes to the model API. Matching still runs in code on the real values.
+- **Sample feed** (`ap-lens feed-sample`): 2,500 synthetic PO lines in the spec's format, for testing the path. Its labels follow rules I wrote, so it tests plumbing, not accuracy.
+
+End-to-end check on the sample feed, with redaction on: 60 live decisions, 0 errors, price mismatches caught 6 of 6. On quantity mismatches the agent waited for the outstanding delivery (WAIT_GR) where the sample expected FIX_QTY (1 of 4). On partial deliveries waiting can be right, so that's a policy each client sets.
+
+```bash
+APLENS_SOURCE=csv uv run ap-lens feed-sample          # or point APLENS_FEED_DIR at a real export
+APLENS_SOURCE=csv uv run ap-lens load && APLENS_SOURCE=csv uv run ap-lens decisions
+APLENS_SOURCE=csv APLENS_REDACT=1 uv run ap-lens eval --n 60
+```
 
 ### Still missing for production
 
 | Gap | Why it matters |
 |---|---|
 | A live ERP connector (SAP) behind `ERPAdapter` | Today the agent reads a 2019 file |
-| Invoice-level amounts in the feed | The counterfactual above shows this is what unlocks price/quantity catches |
+| A client's real feed (spec and adapter are ready) | The counterfactual above shows that invoice-line amounts are what unlock price/quantity catches |
 | A reviewer UI with SSO and roles | `/review` is a read-only table |
 | Monitoring and alerting (rates, drift, cost) | `/metrics` exists, but nothing watches it |
 | An LLM shadow run at a client, then a supervised pilot | The only honest accuracy test |
@@ -167,7 +184,7 @@ evals.py ──▶ metrics.json, traces.jsonl    replay.py ──▶ kpi.json   
 ```bash
 uv sync
 make dev     # synthetic log: whole pipeline, no network, no API key
-make test    # 19 offline tests with fake model clients
+make test    # 28 offline tests with fake model clients
 ```
 
 On the real log:
@@ -209,6 +226,8 @@ src/ap_lens/
   shadow.py           event-stream replay through the service
   readiness.py        fuzz, failure injection, drift, injection, amounts, load
   ocel.py             adapter for the OCEL 2.0 P2P log
+  csvfeed.py          pilot path: client CSV feed adapter + sample-feed generator
+docs/feed_spec.md     the CSV feed spec to hand a client
   tools.py            the agent's tools, shared with the MCP server
   agent.py            LangGraph agent + code guardrail
   guardrail_suite.py  40 edge cases

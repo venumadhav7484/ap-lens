@@ -6,6 +6,7 @@ client can see what happened later.
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass, field
 from functools import cached_property
 
@@ -20,6 +21,16 @@ from . import decisions as D
 _NN_NUM = ["inv_vs_po_pct", "n_events", "n_chg_price", "n_chg_qty", "days_since_create", "po_value"]
 _NN_BOOL = ["gr_posted", "gr_since_inv", "match_ok"]
 _NN_CAT = ["item_type", "spend_area_text", "document_type"]
+
+
+REDACTED_FIELDS = {"vendor", "company"}
+
+
+def pseudonym(kind: str, value) -> str:
+    """Stable, non-reversible stand-in for an identifier (same input -> same pseudonym)."""
+    import hashlib
+    salt = os.environ.get("APLENS_REDACT_SALT", "ap-lens")
+    return f"{kind}_{hashlib.sha256(f'{salt}:{kind}:{value}'.encode()).hexdigest()[:8]}"
 
 
 def _resource_type(r) -> str:
@@ -62,12 +73,16 @@ class CaseStore:
         timeline = [{"step": int(i), "activity": r[C.ACT],
                      "day": round((r[C.TS] - t0).total_seconds() / 86400, 1),
                      "by": _resource_type(r[C.RES]),
-                     "value_eur": None if pd.isna(r.get(C.VALUE)) else float(r.get(C.VALUE))}
+                     "value_eur": None if pd.isna(r.get(C.VALUE)) else float(r.get(C.VALUE)),
+                     **({"qty": float(r["qty"]), "unit_price": None if pd.isna(r.get("unit_price"))
+                         else float(r["unit_price"])} if "qty" in r and not pd.isna(r.get("qty")) else {})}
                     for i, r in rows.tail(max_events).iterrows()]
         keep = [C.ITEM_CATEGORY] + C.CATEGORICAL
-        return {"decision_point": point_id, "triggered_by": p["point_type"],
-                "case": {k: (None if pd.isna(attrs.get(k)) else attrs.get(k)) for k in keep if k in attrs},
-                "timeline": timeline}
+        case = {k: (None if pd.isna(attrs.get(k)) else attrs.get(k)) for k in keep if k in attrs}
+        if C.REDACT:
+            case = {k: (pseudonym(k, v) if k in REDACTED_FIELDS and v is not None else v) for k, v in case.items()}
+        return {"decision_point": point_id, "triggered_by": p["point_type"], "case": case,
+                "timeline": timeline, **({"redacted": sorted(REDACTED_FIELDS)} if C.REDACT else {})}
 
     def check_match(self, point_id: str) -> dict:
         return D.check_match(self.point(point_id))

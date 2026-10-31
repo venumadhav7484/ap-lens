@@ -10,7 +10,9 @@ def main() -> None:
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("fixture", help="write the synthetic dev log")
     sub.add_parser("download", help="fetch the real log (needs approval; ~700 MB)")
-    sub.add_parser("load", help="step 0: XES -> Parquet + inventory")
+    sub.add_parser("load", help="step 0: XES / OCEL / CSV feed -> Parquet + inventory")
+    fs = sub.add_parser("feed-sample", help="write a synthetic pilot feed (CSV) for testing")
+    fs.add_argument("--n", type=int, default=2500)
     sub.add_parser("discover", help="step 1: discovery SQL")
     sub.add_parser("decisions", help="step 2: decision points, labels, split")
     sub.add_parser("router", help="choose the FIX_PRICE/FIX_QTY routing threshold on the pool")
@@ -40,6 +42,9 @@ def main() -> None:
     if a.cmd == "fixture":
         from . import fixture
         print(fixture.write())
+    elif a.cmd == "feed-sample":
+        from . import csvfeed
+        print(csvfeed.sample(n=a.n))
     elif a.cmd == "download":
         from . import load
         load.download()
@@ -47,6 +52,9 @@ def main() -> None:
         if C.SOURCE == "ocel":
             from . import ocel
             inv = ocel.build()
+        elif C.SOURCE == "csv":
+            from . import csvfeed
+            inv = csvfeed.build()
         else:
             from . import load
             inv = load.build()

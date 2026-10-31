@@ -42,7 +42,10 @@ Actions:
 - ESCALATE: you are not confident; a person should look.
 
 How to work:
-1. Call get_case and check_match. check_match is the authoritative 3-way match.
+1. Call get_case and check_match. check_match is the authoritative 3-way match. When it reports
+   a line-level "mismatch": "price" means the buyer must correct the price (FIX_PRICE);
+   "quantity" means invoiced quantity exceeds what was received or ordered (FIX_QTY, or WAIT_GR
+   if more goods are still expected because received is below ordered).
 2. Call similar_cases to see what people did on comparable lines before.
 3. Call ml_prediction (when available): a LightGBM model's probabilities, learned from earlier
    decisions. It sees vendor and item patterns the timeline doesn't show, so it is your main

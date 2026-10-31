@@ -97,4 +97,6 @@ def main() -> None:
         report.render(a.model)
         if C.SOURCE == "real":
             report.update_readme(a.model)
+            from . import viz
+            viz.write_all(a.model)
         print(C.out("report.html"))

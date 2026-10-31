@@ -26,6 +26,10 @@ XES_SOURCES = {
             "file": "BPI_Challenge_2019.xes",
             "md5": "4eb909242351193a61e1c15b9c3cc814",  # as published by another BPIC19 repo
             "note": "Original BPI Challenge 2019 log, all 251,734 cases."},
+    "figshare": {"url": "https://ndownloader.figshare.com/files/24072995",
+                 "file": "BPI_Challenge_2019.xes",
+                 "md5": "4eb909242351193a61e1c15b9c3cc814",  # same file as 4TU (MD5 matches)
+                 "note": "Original BPI Challenge 2019 log via Figshare, all 251,734 cases."},
     "zenodo": {"url": "https://zenodo.org/api/records/17295283/files/"
                       "BPIC19_3way_IbeforeGR_standardPO_complete.xes/content",
                "file": "BPIC19_3way_IbeforeGR_standardPO_complete.xes",
@@ -37,8 +41,9 @@ XES_URL = XES_SOURCES[XES_SOURCE]["url"]
 XES_FILE = DATA / XES_SOURCES[XES_SOURCE]["file"]
 XES_MD5 = XES_SOURCES[XES_SOURCE]["md5"]
 
-# Which log the pipeline reads. "real" = the BPIC19 XES; "fixture" = the synthetic log
-# used for development and tests. Numbers from the fixture are never reported.
+# Which log the pipeline reads. "real" = the BPIC19 XES; "ocel" = the simulated OCEL 2.0 P2P log
+# (second schema, portability check); "fixture" = the synthetic dev log. Fixture numbers are
+# never reported.
 SOURCE = os.environ.get("APLENS_SOURCE", "real")
 FIXTURE_XES = DATA / "fixture.xes"
 
@@ -52,7 +57,7 @@ def parquet(name: str) -> Path:
 
 
 def out(name: str) -> Path:
-    return OUT / (name if SOURCE == "real" else f"fixture_{name}")
+    return OUT / (name if SOURCE == "real" else f"{SOURCE}_{name}")
 
 
 # ---- field names after load.py's snake_case normalisation ----
@@ -64,6 +69,10 @@ VALUE = "cumulative_net_worth_eur"
 ITEM_CATEGORY = "item_category"
 CATEGORICAL = ["item_type", "spend_area_text", "sub_spend_area_text", "document_type",
                "company", "vendor"]
+
+# Invoices recorded after the goods are never blocked in BPIC19, so they are not decision
+# points there. In the OCEL log every invoice goes through a three-way match decision.
+BLOCKED_ONLY = SOURCE != "ocel"
 
 # ---- the flow AP-Lens works on ----
 BLOCK_FLOW = "3-way match, invoice before GR"

@@ -80,6 +80,30 @@ def update_readme(model: str) -> None:
     p.write_text(txt)
 
 
+def _detail(name: str, r: dict) -> str:
+    if name == "fuzz":
+        return (f"{r['cases']:,} random cases, {r['model_proposed_release']:,} release proposals, "
+                f"{r['releases_without_match']} released without a match")
+    if name == "failures":
+        m = r["modes"]
+        return (f"{len(m)} failure types × {next(iter(m.values()))['decisions']}: "
+                f"{sum(v['escalated'] for v in m.values())} escalated, {sum(v['crashes'] for v in m.values())} crashes")
+    if name == "drift":
+        return ", ".join(f"{k}: {v.get('crashes', 'not built')} crashes" for k, v in r["mutations"].items())
+    if name == "injection":
+        return (f"model proposed RELEASE {r['control']['model_proposed_release']}/{r['control']['n']} clean vs "
+                f"{r['injected']['model_proposed_release']}/{r['injected']['n']} injected; final releases "
+                f"{r['injected']['final_release']}")
+    if name == "amounts":
+        b = r["invoice_plus_15pct"]
+        return (f"invoice +15%: RELEASE {b.get('RELEASE', 0)}, FIX_PRICE {b.get('FIX_PRICE', 0)}, "
+                f"FIX_QTY {b.get('FIX_QTY', 0)}, ESCALATE {b.get('ESCALATE', 0)} of {b['n']}")
+    if name == "load":
+        return (f"{r['decisions']:,} decisions, {r['decisions_per_minute']}/min with {r['workers']} workers, "
+                f"{r['api_errors']} API errors, p95 {r['latency_p95_s']:.1f}s, ${r['cost_per_1000']:.2f}/1,000")
+    return ""
+
+
 def _table(rows, cols):
     head = "".join(f"<th>{html.escape(c)}</th>" for c in cols)
     body = "".join("<tr>" + "".join(f"<td>{html.escape(str(r.get(c, '')))}</td>" for c in cols) + "</tr>"
@@ -128,6 +152,16 @@ def render(model: str) -> str:
              "after": round(k["median_days_block_to_release_after"] or 0, 1)},
             {"KPI": "Releases the agent got wrong", "before": "—", "after": k["wrong_releases"]},
         ], ["KPI", "before", "after"]) + f"<p class='note'>{html.escape(k['note'])}</p>")
+    rd = _j("readiness.json")
+    if rd:
+        parts.append("<h2>Readiness scorecard</h2>" + _table(
+            [{"check": n, "result": {True: "PASS", False: "FAIL"}.get(rd[n]["pass"], "INCONCLUSIVE"), "detail": html.escape(_detail(n, rd[n]))}
+             for n in ("fuzz", "failures", "drift", "injection", "amounts", "load") if n in rd],
+            ["check", "result", "detail"]))
+    sh = _j("shadow.json")
+    if sh:
+        parts.append("<h2>Shadow mode</h2>" + _table([{k2: v for k2, v in sh.items() if k2 != "window"}],
+                                                       [k2 for k2 in sh if k2 != "window"]))
     css = ("body{font:15px/1.5 system-ui,sans-serif;max-width:900px;margin:32px auto;padding:0 16px;color:#1c2230}"
            "table{border-collapse:collapse;width:100%;margin:12px 0}td,th{border-bottom:1px solid #ddd;padding:6px 8px;"
            "text-align:left;font-size:13px}.warn{background:#fde8d8;padding:8px 12px;border-radius:4px}"

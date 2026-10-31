@@ -14,6 +14,16 @@ def main() -> None:
     sub.add_parser("discover", help="step 1: discovery SQL")
     sub.add_parser("decisions", help="step 2: decision points, labels, split")
     sub.add_parser("router", help="choose the FIX_PRICE/FIX_QTY routing threshold on the pool")
+    sh = sub.add_parser("shadow", help="replay events in time order; agent decides live, audited")
+    sh.add_argument("--model", default="claude-haiku-5-5")
+    sh.add_argument("--n", type=int, default=100)
+    sh.add_argument("--rule", action="store_true", help="decide with the batch rule instead of the LLM ($0)")
+    rd = sub.add_parser("readiness", help="readiness scorecard: fuzz, failures, drift (+ live checks)")
+    rd.add_argument("--model", default="claude-haiku-5-5")
+    rd.add_argument("--offline", action="store_true", help="skip the live-model checks")
+    rd.add_argument("--load-n", type=int, default=2000)
+    rd.add_argument("--only", default=None, help="rerun one check: fuzz|failures|drift|injection|amounts|load")
+    rd.add_argument("--workers", type=int, default=16)
     e = sub.add_parser("eval", help="step 5: baselines + agent + guardrail suite")
     e.add_argument("--models", default="claude-haiku-5-5")
     e.add_argument("--n", type=int, default=None)
@@ -34,8 +44,12 @@ def main() -> None:
         from . import load
         load.download()
     elif a.cmd == "load":
-        from . import load
-        inv = load.build()
+        if C.SOURCE == "ocel":
+            from . import ocel
+            inv = ocel.build()
+        else:
+            from . import load
+            inv = load.build()
         print(json.dumps({k: inv[k] for k in ("events", "cases", "activities", "human_resources",
                                               "missing_expected_activities", "item_category_counts",
                                               "value_varies_within_case_share")}, indent=1, default=str))
@@ -50,6 +64,14 @@ def main() -> None:
         df = decisions.load()
         r = router.choose_threshold(df[df["pool"]])
         print(json.dumps({k: r[k] for k in ("chosen_threshold", "target_precision", "pool_points")}, indent=1))
+    elif a.cmd == "shadow":
+        from . import shadow
+        client = shadow.RuleDecider() if a.rule else None
+        print(json.dumps(shadow.run(a.model, a.n, client=client), indent=1, default=str))
+    elif a.cmd == "readiness":
+        from . import readiness
+        card = readiness.run(a.model, live=not a.offline, load_n=a.load_n, only=a.only, workers=a.workers)
+        print(json.dumps({k: v.get("pass") for k, v in card.items() if isinstance(v, dict)}, indent=1))
     elif a.cmd == "eval":
         from . import evals
         rep = evals.run([m for m in a.models.split(",") if m], n=a.n, effort=a.effort, cap=a.cap or C.SPEND_CAP_USD,

@@ -1,0 +1,212 @@
+{
+ "source": "ocel",
+ "overview": {
+  "events": 4500,
+  "cases": 870,
+  "activities": 6,
+  "human_share": 0.8984444444444445
+ },
+ "flows": [
+  {
+   "flow": "3-way match, invoice before GR",
+   "cases": 870,
+   "share": 1.0
+  }
+ ],
+ "activities": [
+  {
+   "activity": "Record Goods Receipt",
+   "events": 900,
+   "cases": 870,
+   "human_share": 1.0,
+   "median_days_to_next": 2.0,
+   "repeat_share": 0.034482758620689655
+  },
+  {
+   "activity": "Record Invoice Receipt",
+   "events": 900,
+   "cases": 870,
+   "human_share": 1.0,
+   "median_days_to_next": 0.02013888888888889,
+   "repeat_share": 0.034482758620689655
+  },
+  {
+   "activity": "Create Purchase Order Item",
+   "events": 900,
+   "cases": 870,
+   "human_share": 0.4922222222222222,
+   "median_days_to_next": 3.0434027777777777,
+   "repeat_share": 0.034482758620689655
+  },
+  {
+   "activity": "Clear Invoice",
+   "events": 900,
+   "cases": 831,
+   "human_share": 1.0,
+   "median_days_to_next": 3.011111111111111,
+   "repeat_share": 0.07701564380264742
+  },
+  {
+   "activity": "Remove Payment Block",
+   "events": 823,
+   "cases": 798,
+   "human_share": 1.0,
+   "median_days_to_next": 5.0,
+   "repeat_share": 0.03132832080200501
+  },
+  {
+   "activity": "Change Price",
+   "events": 77,
+   "cases": 77,
+   "human_share": 1.0,
+   "median_days_to_next": 5.5,
+   "repeat_share": 0.0
+  }
+ ],
+ "variants": [
+  {
+   "path": "Create Purchase Order Item > Record Goods Receipt > Record Invoice Receipt > Remove Payment Block > Clear Invoice",
+   "cases": 700,
+   "share": 0.8045977011494253
+  },
+  {
+   "path": "Create Purchase Order Item > Record Goods Receipt > Record Invoice Receipt > Change Price > Clear Invoice",
+   "cases": 64,
+   "share": 0.0735632183908046
+  },
+  {
+   "path": "Create Purchase Order Item > Record Goods Receipt > Record Invoice Receipt > Remove Payment Block",
+   "cases": 34,
+   "share": 0.03908045977011494
+  },
+  {
+   "path": "Create Purchase Order Item > Record Goods Receipt > Record Invoice Receipt > Remove Payment Block > Clear Invoice > Clear Invoice",
+   "cases": 30,
+   "share": 0.034482758620689655
+  },
+  {
+   "path": "Create Purchase Order Item > Create Purchase Order Item > Record Goods Receipt > Record Goods Receipt > Record Invoice Receipt > Remove Payment Block > Record Invoice Receipt > Remove Payment Block > Clear Invoice > Clear Invoice",
+   "cases": 13,
+   "share": 0.014942528735632184
+  },
+  {
+   "path": "Create Purchase Order Item > Record Goods Receipt > Record Invoice Receipt > Change Price",
+   "cases": 5,
+   "share": 0.005747126436781609
+  },
+  {
+   "path": "Create Purchase Order Item > Create Purchase Order Item > Record Goods Receipt > Record Invoice Receipt > Remove Payment Block > Record Goods Receipt > Record Invoice Receipt > Remove Payment Block > Clear Invoice > Clear Invoice",
+   "cases": 4,
+   "share": 0.004597701149425287
+  },
+  {
+   "path": "Create Purchase Order Item > Record Goods Receipt > Record Invoice Receipt > Change Price > Clear Invoice > Clear Invoice",
+   "cases": 3,
+   "share": 0.0034482758620689655
+  },
+  {
+   "path": "Create Purchase Order Item > Record Goods Receipt > Clear Invoice > Record Invoice Receipt > Remove Payment Block > Clear Invoice",
+   "cases": 3,
+   "share": 0.0034482758620689655
+  },
+  {
+   "path": "Create Purchase Order Item > Create Purchase Order Item > Record Goods Receipt > Record Invoice Receipt > Remove Payment Block > Record Goods Receipt > Record Invoice Receipt > Change Price > Clear Invoice > Clear Invoice",
+   "cases": 3,
+   "share": 0.0034482758620689655
+  }
+ ],
+ "n_variants": 18,
+ "slowest_handoffs": [
+  {
+   "handoff": "Change Price \u2192 Clear Invoice",
+   "n": 70,
+   "median_days": 6.0
+  },
+  {
+   "handoff": "Remove Payment Block \u2192 Clear Invoice",
+   "n": 763,
+   "median_days": 5.0
+  },
+  {
+   "handoff": "Create Purchase Order Item \u2192 Record Goods Receipt",
+   "n": 870,
+   "median_days": 3.048611111111111
+  },
+  {
+   "handoff": "Clear Invoice \u2192 Clear Invoice",
+   "n": 64,
+   "median_days": 3.030190972222222
+  },
+  {
+   "handoff": "Record Goods Receipt \u2192 Record Invoice Receipt",
+   "n": 875,
+   "median_days": 2.0
+  },
+  {
+   "handoff": "Record Invoice Receipt \u2192 Change Price",
+   "n": 77,
+   "median_days": 0.022916666666666665
+  },
+  {
+   "handoff": "Record Invoice Receipt \u2192 Remove Payment Block",
+   "n": 821,
+   "median_days": 0.02013888888888889
+  }
+ ],
+ "block_flow": {
+  "cases": 870,
+  "unblocks": 823,
+  "unblock_human_share": 1.0,
+  "median_days_inv_to_clear": 6.0159722222222225
+ },
+ "buckets": {
+  "human": {
+   "events": 1800,
+   "human_events": 1343,
+   "activities": [
+    {
+     "activity": "Record Goods Receipt",
+     "events": 900,
+     "why": "Physical receipt at the warehouse"
+    },
+    {
+     "activity": "Create Purchase Order Item",
+     "events": 900,
+     "why": "Buying decision"
+    }
+   ]
+  },
+  "code": {
+   "events": 1800,
+   "human_events": 1800,
+   "activities": [
+    {
+     "activity": "Record Invoice Receipt",
+     "events": 900,
+     "why": "Invoice capture: e-invoicing / OCR, not a judgement"
+    },
+    {
+     "activity": "Clear Invoice",
+     "events": 900,
+     "why": "Payment run; fully decided by fields"
+    }
+   ]
+  },
+  "agent": {
+   "events": 900,
+   "human_events": 900,
+   "activities": [
+    {
+     "activity": "Remove Payment Block",
+     "events": 823,
+     "why": "Release decision: code checks the match, agent triages the rest"
+    },
+    {
+     "activity": "Change Price",
+     "events": 77,
+     "why": "Agent drafts the buyer note; buyer approves"
+    }
+   ]
+  }
+ }
+}

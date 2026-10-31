@@ -110,7 +110,9 @@ class Agent:
         self.tools = TOOLS if use_ml else [t for t in TOOLS if t["name"] != "ml_prediction"]
         self.route_threshold = route_threshold
         self.erp = erp or ReplayERP(store)
-        self.client = client or anthropic.Anthropic()
+        # SDK retries 429/5xx with exponential backoff and honours retry-after; 2 retries (the
+        # default) wasn't enough under a 16-worker burst on a low-tier key.
+        self.client = client or anthropic.Anthropic(max_retries=8)
         g = StateGraph(State)
         g.add_node("route", self.route)
         g.add_node("investigate", self.investigate)
@@ -168,7 +170,11 @@ class Agent:
         usage = {"input": 0, "output": 0, "cache_read": 0, "cache_write": 0}
         calls, t0, stop, text = [], time.perf_counter(), None, None
         for _ in range(self.max_turns):
-            r = self._create(messages)
+            try:
+                r = self._create(messages)
+            except Exception as e:  # API down, rate-limited past retries, timeout: fail safe
+                stop = f"api_error: {type(e).__name__}"
+                break
             u = r.usage
             usage["input"] += u.input_tokens or 0
             usage["output"] += u.output_tokens or 0
@@ -203,9 +209,18 @@ class Agent:
 
     def guardrail(self, state: State) -> State:
         p = dict(state["proposal"])
-        match = self.store.check_match(state["point_id"])
+        try:
+            match = self.store.check_match(state["point_id"])
+        except Exception:  # unreadable case data counts as a failed match
+            match = {"within_tolerance": False}
+        if p.get("action") not in C.AGENT_ACTIONS:
+            p["action"] = "ESCALATE"
+        try:
+            conf = float(p.get("confidence", 0))
+        except (TypeError, ValueError):
+            conf = 0.0
         violation = p["action"] == "RELEASE" and not match["within_tolerance"]
-        low_conf = p["action"] != "ESCALATE" and float(p.get("confidence", 0)) < C.MIN_CONFIDENCE
+        low_conf = p["action"] != "ESCALATE" and conf < C.MIN_CONFIDENCE
         final = dict(p)
         if violation or low_conf:
             final["action"] = "ESCALATE"

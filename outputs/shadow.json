@@ -1,0 +1,19 @@
+{
+ "model": "batch rule (no LLM)",
+ "decision_points": 500,
+ "decided": 500,
+ "outcomes_observed": 499,
+ "agreement_final": 0.8957915831663327,
+ "escalation_rate": 0.0,
+ "api_errors": 0,
+ "agent_latency_p50_s": 0.0,
+ "agent_latency_p95_s": 0.0,
+ "person_median_days_to_act": 2.01875,
+ "cost_usd": 0.0,
+ "wall_s": 1.3,
+ "window": [
+  "2018-09-26 14:20:00+00:00",
+  "2018-10-05 06:49:00+00:00"
+ ],
+ "audit_db": "shadow_audit.sqlite"
+}

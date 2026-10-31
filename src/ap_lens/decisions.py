@@ -48,9 +48,13 @@ def check_match(f: dict) -> dict:
     def close(a, b):
         return a is not None and b is not None and abs(a - b) <= C.VALUE_TOLERANCE * max(abs(a), abs(b), 1e-9)
 
-    values_known = None not in (po, inv)
-    inv_vs_po = None if not values_known else (inv - po) / max(abs(po), 1e-9)
-    ok = bool(f.get("gr_posted")) and values_known and close(inv, po) and (gr is None or close(gr, inv))
+    def valid(x):  # an amount the matcher can trust: present, finite, positive
+        return x is not None and np.isfinite(x) and x > 0
+
+    values_known = valid(po) and valid(inv)
+    inv_vs_po = None if not values_known else (inv - po) / po
+    ok = (bool(f.get("gr_posted")) and values_known and close(inv, po)
+          and (gr is None or (valid(gr) and close(gr, inv))))
     return {"gr_posted": bool(f.get("gr_posted")), "values_known": values_known,
             "invoice_vs_po_pct": None if inv_vs_po is None else round(100 * inv_vs_po, 2),
             "within_tolerance": ok}
@@ -76,7 +80,7 @@ def build(ev: pd.DataFrame, cs: pd.DataFrame) -> pd.DataFrame:
             if nxt is None:
                 continue
             f = _prefix_facts(rows.iloc[: i + 1])
-            if a == C.INV and f["gr_posted"]:
+            if C.BLOCKED_ONLY and a == C.INV and f["gr_posted"]:
                 continue  # goods already received: the invoice is never blocked, no decision to make
             label_act = acts[nxt]
             pts.append({

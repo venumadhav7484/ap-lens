@@ -1,0 +1,55 @@
+{
+ "source": "ocel",
+ "xes": "synthetic fixture",
+ "events": 4500,
+ "cases": 870,
+ "activities": 6,
+ "resources": 66,
+ "human_resources": 65,
+ "resource_prefixes": {
+  "user": 4043,
+  "batch": 457
+ },
+ "activity_counts": {
+  "Create Purchase Order Item": 900,
+  "Record Goods Receipt": 900,
+  "Record Invoice Receipt": 900,
+  "Clear Invoice": 900,
+  "Remove Payment Block": 823,
+  "Change Price": 77
+ },
+ "missing_expected_activities": [
+  "Cancel Goods Receipt",
+  "Change Quantity",
+  "Cancel Invoice Receipt",
+  "Delete Purchase Order Item"
+ ],
+ "case_columns": [
+  "case_id",
+  "company",
+  "document_type",
+  "item_category",
+  "item_type",
+  "spend_area_text",
+  "sub_spend_area_text",
+  "vendor"
+ ],
+ "event_columns": [
+  "activity",
+  "activity_raw",
+  "case_id",
+  "cumulative_net_worth_eur",
+  "resource",
+  "seq",
+  "ts"
+ ],
+ "item_category_counts": {
+  "3-way match, invoice before GR": 870
+ },
+ "value_present_share": 0.6,
+ "value_varies_within_case_share": 0.07701149425287357,
+ "ts_range": [
+  "2024-09-02 08:20:53.398777+00:00",
+  "2024-09-20 12:36:57.686830+00:00"
+ ]
+}

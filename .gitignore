@@ -6,3 +6,4 @@ outputs/*.jsonl
 *.parquet
 .DS_Store
 .env
+outputs/audit.sqlite

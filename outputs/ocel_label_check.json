@@ -1,0 +1,17 @@
+{
+ "Three-way Match - Successful": {
+  "n": 823,
+  "amount_differs": 89,
+  "goods_damaged": 440,
+  "amount_differs_share": 0.10814094775212636,
+  "damaged_share": 0.534629404617254
+ },
+ "Three-way Match - Mismatch Found": {
+  "n": 77,
+  "amount_differs": 8,
+  "goods_damaged": 42,
+  "amount_differs_share": 0.1038961038961039,
+  "damaged_share": 0.5454545454545454
+ },
+ "verdict": "Outcome looks independent of amount and goods condition: usable for portability, not for accuracy."
+}

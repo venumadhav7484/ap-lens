@@ -1,10 +1,11 @@
 services:
+  api:
+    build: .
+    ports: ["8000:8000"]
+    environment: ["ANTHROPIC_API_KEY", "APLENS_API_KEY", "APLENS_XES"]
+    volumes: ["./data:/app/data", "./outputs:/app/outputs"]
   mcp:
     build: .
+    command: ["ap-lens-mcp"]
     stdin_open: true
-    volumes: ["./data:/app/data", "./outputs:/app/outputs"]
-  pipeline:
-    build: .
-    command: ["make", "all"]
-    environment: ["ANTHROPIC_API_KEY"]
     volumes: ["./data:/app/data", "./outputs:/app/outputs"]

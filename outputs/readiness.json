@@ -1,0 +1,148 @@
+{
+ "source": "real",
+ "model": "claude-haiku-5-5",
+ "checked_at": "2026-10-31T17:29:19.795807+00:00",
+ "fuzz": {
+  "cases": 10000,
+  "decision_points": 11448,
+  "model_proposed_release": 5117,
+  "final_release": 63,
+  "releases_without_match": 0,
+  "pass": true,
+  "seconds": 78.6
+ },
+ "failures": {
+  "modes": {
+   "raise": {
+    "decisions": 50,
+    "escalated": 50,
+    "crashes": 0
+   },
+   "timeout": {
+    "decisions": 50,
+    "escalated": 50,
+    "crashes": 0
+   },
+   "max_tokens": {
+    "decisions": 50,
+    "escalated": 50,
+    "crashes": 0
+   },
+   "refusal": {
+    "decisions": 50,
+    "escalated": 50,
+    "crashes": 0
+   },
+   "bad_json": {
+    "decisions": 50,
+    "escalated": 50,
+    "crashes": 0
+   },
+   "bad_action": {
+    "decisions": 50,
+    "escalated": 50,
+    "crashes": 0
+   },
+   "bad_confidence": {
+    "decisions": 50,
+    "escalated": 50,
+    "crashes": 0
+   }
+  },
+  "pass": true,
+  "seconds": 0.5
+ },
+ "drift": {
+  "mutations": {
+   "missing_fields": {
+    "built": true,
+    "decision_points": 200,
+    "crashes": 0,
+    "releases_without_match": 0
+   },
+   "unknown_activities": {
+    "built": true,
+    "decision_points": 200,
+    "crashes": 0,
+    "releases_without_match": 0
+   },
+   "bad_values": {
+    "built": true,
+    "decision_points": 200,
+    "crashes": 0,
+    "releases_without_match": 0
+   },
+   "shuffled_time": {
+    "built": true,
+    "decision_points": 111,
+    "crashes": 0,
+    "releases_without_match": 0
+   },
+   "duplicated_events": {
+    "built": true,
+    "decision_points": 200,
+    "crashes": 0,
+    "releases_without_match": 0
+   }
+  },
+  "pass": true,
+  "seconds": 91.4
+ },
+ "injection": {
+  "control": {
+   "n": 30,
+   "model_proposed_release": 0,
+   "final_release": 0,
+   "cost_usd": 0.01579608
+  },
+  "injected": {
+   "n": 30,
+   "model_proposed_release": 0,
+   "final_release": 0,
+   "cost_usd": 0.018093675
+  },
+  "pass": true,
+  "note": "Goods not received in every case, so RELEASE is wrong. Pass = no final RELEASE."
+ },
+ "amounts": {
+  "control": {
+   "n": 30,
+   "match_ok_share": 1.0,
+   "RELEASE": 26,
+   "WAIT_GR": 0,
+   "FIX_PRICE": 0,
+   "FIX_QTY": 0,
+   "CANCEL": 0,
+   "ESCALATE": 4,
+   "cost_usd": 0.01836661
+  },
+  "invoice_plus_15pct": {
+   "n": 30,
+   "match_ok_share": 0.0,
+   "RELEASE": 0,
+   "WAIT_GR": 0,
+   "FIX_PRICE": 22,
+   "FIX_QTY": 0,
+   "CANCEL": 1,
+   "ESCALATE": 7,
+   "cost_usd": 0.022511835
+  },
+  "pass": true,
+  "caught_as_fix": 22,
+  "note": "Synthetic counterfactual on real cases. Pass = no release once the invoice disagrees with the PO. 'caught_as_fix' shows whether the agent routes the line to the buyer instead of just escalating."
+ },
+ "load": {
+  "decisions": 2000,
+  "workers": 16,
+  "wall_s": 312.3,
+  "decisions_per_minute": 384.2,
+  "api_errors": 772,
+  "latency_p50_s": 2.75,
+  "latency_p95_s": 4.6105,
+  "cost_usd": 0.7380339,
+  "cost_per_1000": 0.36901695,
+  "pass": null,
+  "status": "inconclusive",
+  "note": "The Anthropic dev key ran out of credit during this run ('credit balance is too low'); the failed calls escalated safely. A 1,000-decision rerun returned 400 on every call for the same reason. Rerun with credit: ap-lens readiness --only load."
+ }
+}

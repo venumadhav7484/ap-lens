@@ -134,15 +134,15 @@
  "load": {
   "decisions": 2000,
   "workers": 16,
-  "wall_s": 312.3,
-  "decisions_per_minute": 384.2,
-  "api_errors": 772,
-  "latency_p50_s": 2.75,
-  "latency_p95_s": 4.6105,
-  "cost_usd": 0.7380339,
-  "cost_per_1000": 0.36901695,
-  "pass": null,
-  "status": "inconclusive",
-  "note": "The Anthropic dev key ran out of credit during this run ('credit balance is too low'); the failed calls escalated safely. A 1,000-decision rerun returned 400 on every call for the same reason. Rerun with credit: ap-lens readiness --only load."
- }
+  "wall_s": 473.5,
+  "decisions_per_minute": 253.5,
+  "api_errors": 0,
+  "api_error_types": {},
+  "latency_p50_s": 3.22,
+  "latency_p95_s": 5.42,
+  "cost_usd": 1.19786108,
+  "cost_per_1000": 0.59893054,
+  "pass": true
+ },
+ "load_checked_at": "2026-10-31T18:52:51.571099+00:00"
 }

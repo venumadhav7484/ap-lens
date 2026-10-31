@@ -102,18 +102,41 @@ def cost_usd(model: str, usage: dict) -> float:
 class Agent:
     def __init__(self, store: CaseStore, model: str = "claude-haiku-5-5", effort: str = "low",
                  erp: ReplayERP | None = None, client: Any = None, max_turns: int = 6,
-                 use_ml: bool = True):
+                 use_ml: bool = True, route_threshold: float | None = None):
+        """route_threshold: send confident LightGBM FIX_PRICE / FIX_QTY calls straight to the
+        buyer queue (router.py). None = off, the default: on the pool the rule never reached
+        its 80% precision bar."""
         self.store, self.model, self.effort, self.max_turns = store, model, effort, max_turns
         self.tools = TOOLS if use_ml else [t for t in TOOLS if t["name"] != "ml_prediction"]
+        self.route_threshold = route_threshold
         self.erp = erp or ReplayERP(store)
         self.client = client or anthropic.Anthropic()
         g = StateGraph(State)
+        g.add_node("route", self.route)
         g.add_node("investigate", self.investigate)
         g.add_node("guardrail", self.guardrail)
-        g.add_edge(START, "investigate")
+        g.add_edge(START, "route")
+        g.add_conditional_edges("route", lambda s: "guardrail" if s.get("proposal") else "investigate",
+                                ["guardrail", "investigate"])
         g.add_edge("investigate", "guardrail")
         g.add_edge("guardrail", END)
         self.graph = g.compile()
+
+    def route(self, state: State) -> State:
+        from .router import route
+        if self.route_threshold is None:
+            return {}
+        probs = self.store.ml_prediction(state["point_id"])["probabilities"]
+        hit = route(probs, self.route_threshold)
+        if not hit:
+            return {}
+        action, p = hit
+        proposal = {"action": action, "confidence": p, "evidence_case_ids": [], "buyer_note": "",
+                    "reason": f"routed in code: LightGBM {action} probability {p:.2f} ≥ {self.route_threshold}"}
+        trace = {"point_id": state["point_id"], "model": "router", "tool_calls": [], "stop_reason": "routed",
+                 "usage": {"input": 0, "output": 0, "cache_read": 0, "cache_write": 0},
+                 "cost_usd": 0.0, "latency_s": 0.0}
+        return {"proposal": proposal, "trace": trace}
 
     # ---- tool dispatch, bound to the decision point ----
     def _run_tool(self, point_id: str, name: str, args: dict) -> str:

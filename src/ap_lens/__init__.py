@@ -13,6 +13,7 @@ def main() -> None:
     sub.add_parser("load", help="step 0: XES -> Parquet + inventory")
     sub.add_parser("discover", help="step 1: discovery SQL")
     sub.add_parser("decisions", help="step 2: decision points, labels, split")
+    sub.add_parser("router", help="choose the FIX_PRICE/FIX_QTY routing threshold on the pool")
     e = sub.add_parser("eval", help="step 5: baselines + agent + guardrail suite")
     e.add_argument("--models", default="claude-haiku-5-5")
     e.add_argument("--n", type=int, default=None)
@@ -44,6 +45,11 @@ def main() -> None:
     elif a.cmd == "decisions":
         from . import decisions
         print(json.dumps(decisions.run(), indent=1, default=str))
+    elif a.cmd == "router":
+        from . import decisions, router
+        df = decisions.load()
+        r = router.choose_threshold(df[df["pool"]])
+        print(json.dumps({k: r[k] for k in ("chosen_threshold", "target_precision", "pool_points")}, indent=1))
     elif a.cmd == "eval":
         from . import evals
         rep = evals.run([m for m in a.models.split(",") if m], n=a.n, effort=a.effort, cap=a.cap or C.SPEND_CAP_USD,

@@ -104,3 +104,14 @@ def test_ml_prediction_is_a_distribution(store):
     out = store.ml_prediction(pid)
     assert abs(sum(out["probabilities"].values()) - 1) < 1e-3
     assert out["predicted"] in C.ACTIONS
+
+
+def test_router_off_by_default_and_skips_agent_when_it_fires(store):
+    pid = store.points.loc[store.points["heldout"], "point_id"].iloc[0]
+    answer = {"action": "WAIT_GR", "confidence": 0.9, "reason": "x", "evidence_case_ids": [], "buyer_note": ""}
+    off = Agent(store, client=FakeClient(lambda t: answer)).decide(pid)
+    assert off["trace"]["model"] != "router"
+    # threshold 0 always fires: the agent is never called and the action is a buyer fix
+    on = Agent(store, client=FakeClient(lambda t: answer), route_threshold=0.0).decide(pid)
+    assert on["trace"]["model"] == "router" and on["trace"]["tool_calls"] == []
+    assert on["final"]["action"] in ("FIX_PRICE", "FIX_QTY", "ESCALATE")

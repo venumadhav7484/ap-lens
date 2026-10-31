@@ -1,0 +1,94 @@
+{
+ "chosen_threshold": null,
+ "target_precision": 0.8,
+ "min_support": 5,
+ "pool_points": 26465,
+ "folds": 5,
+ "sweep": [
+  {
+   "threshold": 0.3,
+   "routed": 1177,
+   "correct": 194,
+   "precision": 0.16482582837723025
+  },
+  {
+   "threshold": 0.35,
+   "routed": 983,
+   "correct": 184,
+   "precision": 0.1871820956256358
+  },
+  {
+   "threshold": 0.4,
+   "routed": 837,
+   "correct": 175,
+   "precision": 0.20908004778972522
+  },
+  {
+   "threshold": 0.45,
+   "routed": 716,
+   "correct": 168,
+   "precision": 0.2346368715083799
+  },
+  {
+   "threshold": 0.5,
+   "routed": 614,
+   "correct": 159,
+   "precision": 0.25895765472312704
+  },
+  {
+   "threshold": 0.55,
+   "routed": 528,
+   "correct": 150,
+   "precision": 0.2840909090909091
+  },
+  {
+   "threshold": 0.6,
+   "routed": 473,
+   "correct": 144,
+   "precision": 0.3044397463002114
+  },
+  {
+   "threshold": 0.65,
+   "routed": 385,
+   "correct": 133,
+   "precision": 0.34545454545454546
+  },
+  {
+   "threshold": 0.7,
+   "routed": 331,
+   "correct": 127,
+   "precision": 0.38368580060422963
+  },
+  {
+   "threshold": 0.75,
+   "routed": 267,
+   "correct": 120,
+   "precision": 0.449438202247191
+  },
+  {
+   "threshold": 0.8,
+   "routed": 230,
+   "correct": 114,
+   "precision": 0.4956521739130435
+  },
+  {
+   "threshold": 0.85,
+   "routed": 199,
+   "correct": 108,
+   "precision": 0.542713567839196
+  },
+  {
+   "threshold": 0.9,
+   "routed": 166,
+   "correct": 104,
+   "precision": 0.6265060240963856
+  },
+  {
+   "threshold": 0.95,
+   "routed": 117,
+   "correct": 89,
+   "precision": 0.7606837606837606
+  }
+ ],
+ "note": "Chosen on out-of-fold predictions over the precedent pool; the held-out set is never used."
+}

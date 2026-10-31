@@ -41,7 +41,16 @@ Differences of a point or two between runs are within noise at n = 500.
 - **Common cases belong in code.** On "release once the goods arrive, otherwise wait", a two-line batch rule (87.2%) is as accurate as the LLM.
 - **The agent's edge is safety.** Its releases are the safest of any system, it escalates about 4% of cases instead of guessing, and it never proposed a release the match check would block.
 - **Handing the agent the model didn't transfer the model's skill.** In run 2, LightGBM's price and quantity calls were right 7 times out of 9 (2/3 price, 5/6 quantity). The agent overrode all of them and sided with the timeline and the match check, which can't see those mismatches: the log carries no separate invoice amounts, and the value field varies within a case for only 0.3% of cases. It was right to ignore LightGBM's cancel calls (3 correct out of 31).
-- **The FDE conclusion:** route high-confidence FIX_PRICE / FIX_QTY predictions from LightGBM straight to the buyer queue in code. Keep the agent for release triage, escalation and drafting the buyer note. Prompt-tuning the agent to trust the model more would mostly import the noise.
+- **Can code route LightGBM's confident price and quantity calls instead?** Not reliably. `router.py` picks the threshold with 5-fold cross-validation on the precedent pool (26,465 decisions, folds grouped by case). The held-out set is never used. The bar, set before looking, was 80% precision:
+
+  | LightGBM confidence ≥ | Lines routed | Right | Precision |
+  |---|---|---|---|
+  | 0.80 | 230 | 114 | 50% |
+  | 0.90 | 166 | 104 | 63% |
+  | 0.95 | 117 | 89 | 76% |
+
+  No threshold clears 80%. The "7 of 9" on the held-out set was small-sample luck. So the router ships **off by default** (`route_threshold=None`), and lowering the bar after seeing the numbers would be tuning to the result.
+- **The FDE conclusion:** release triage belongs in code (the batch rule) plus the agent for safety and escalation. Price and quantity disputes stay with people until the data carries invoice-level amounts; that's the integration a real deployment would ask the client for first.
 
 ## The exception
 
@@ -99,7 +108,7 @@ evals.py ──▶ metrics.json, traces.jsonl    replay.py ──▶ kpi.json   
 ```bash
 uv sync
 make dev     # synthetic log: whole pipeline, no network, no API key
-make test    # 8 offline tests with a fake model client
+make test    # 9 offline tests with a fake model client
 ```
 
 On the real log:
@@ -125,6 +134,7 @@ src/ap_lens/
   discover.py         discovery SQL and the delete / code / agent / human buckets
   decisions.py        decision points, labels, time split
   baselines.py        majority, batch rule, LightGBM
+  router.py           optional code routing of LightGBM price/quantity calls (off by default)
   tools.py            the agent's tools, shared with the MCP server
   agent.py            LangGraph agent + code guardrail
   guardrail_suite.py  40 edge cases
